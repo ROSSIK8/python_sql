@@ -1,41 +1,39 @@
 import psycopg2
+
+from config import *
 from funcs import *
 
-
-with psycopg2.connect(database='netolog_db', user='postgres', password='april082004') as conn:
-    with conn.cursor() as cur:
-        cur.execute(create_db())
-
-        conn.commit()
-
-        cur.execute(add_client('Sanzhay', 'Ayurov', 'ayurov2004@gmail.com', '+7(914)-126-81-78, +7(999)-677-82-67'))
-        cur.execute(add_client('Luffy', 'Monkey D.', 'ML@email.ru'))
-        cur.execute(add_client('Zoro', 'Roarono', 'RZ@bk.ru'))
-        cur.execute(add_client('Алишер', 'Моргенштерн', 'МА@email.ru'))
-        cur.execute(add_client('Abc', 'Efg', 'abcefg@email.ru', '+7(999)-888-88-88'))
-        cur.execute(add_client('Абв', 'Где', 'abvgde@bk.ru'))
+if __name__ == '__main__':
+    with psycopg2.connect(database=database, user=user, password=password) as conn:
+        create_db(conn)
 
 
-        cur.execute(add_phone(3, '+7(999)-999-99-99'))
+        add_client(conn, 'Sanzhay', 'Ayurov', 'ayurov2004@gmail.com')
+        add_client(conn, 'Luffy', 'Monkey D.', 'ML@email.ru')
+        add_client(conn, 'Zoro', 'Roarono', 'RZ@bk.ru')
+        add_client(conn, 'Алишер', 'Моргенштерн', 'МА@email.ru')
+        add_client(conn, 'Abc', 'Efg', 'abcefg@email.ru')
+        add_client(conn, 'Абв', 'Где', 'abvgde@bk.ru')
 
-        cur.execute(change_client(4, 'Victor', 'Tsoy', 'TV@gmail.com'))
 
-        cur.execute(delete_phone(5))
+        add_phone(conn, 1, '+7(999)-677-82-67')
+        add_phone(conn, 1, '+7(914)-126-81-78')
+        add_phone(conn, 3, '+7(999)-999-99-99')
+        add_phone(conn, 5, '+7(555)-555-55-55')
+        add_phone(conn, 4, '+7(666)-666-66-66')
 
-        cur.execute(delete_client(6))
+        delete_phone(conn, '+7(555)-555-55-55')
+        change_client(conn, 4, 'Victor', 'Tsoy', 'TV@gmail.com')
+
+        delete_client(conn, 6)
 
 
-        cur.execute(find_client(phone='+7(914)-126-81-78'))
-        print(cur.fetchone())
-
-        cur.execute(find_client(first_name='Luffy'))
-        print(cur.fetchone())
-
-        cur.execute(find_client(last_name='Roarono'))
-        print(cur.fetchone())
-
-        cur.execute(find_client(email='TV@gmail.com'))
-        print(cur.fetchone())
-
-        cur.execute(find_client(email='abcefg@email.ru'))
-        print(cur.fetchone())
+        find_client(conn, last_name='Ayurov')
+        print()
+        find_client(conn, last_name='Monkey D.')
+        print()
+        find_client(conn, last_name='Roarono')
+        print()
+        find_client(conn, phone='+7(914)-126-81-78')
+        print()
+        find_client(conn, phone='+7(999)-999-99-99')
